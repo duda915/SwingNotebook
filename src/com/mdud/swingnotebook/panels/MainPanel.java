@@ -3,7 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mdud.swingnotebook;
+package com.mdud.swingnotebook.panels;
+
+
+import com.mdud.swingnotebook.View;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
  *
@@ -14,9 +25,13 @@ public class MainPanel extends javax.swing.JPanel {
     /**
      * Creates new form MainPanel
      */
-    public MainPanel() {
+    private View view;
+    
+    public MainPanel(View view) {
         initComponents();
+        this.view = view;
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -35,20 +50,27 @@ public class MainPanel extends javax.swing.JPanel {
         minusButton = new javax.swing.JButton();
         rightPanel = new javax.swing.JPanel();
         titleTextField = new javax.swing.JTextField();
-        noteField = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        scrollPaneNote = new javax.swing.JScrollPane();
+        noteTextArea = new javax.swing.JTextArea();
         saveButton = new javax.swing.JButton();
+        dateField = new javax.swing.JTextField();
+        doneButton = new javax.swing.JButton();
 
         logoLable.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mdud/res/icon.png"))); // NOI18N
 
-        itemList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        itemList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                itemListMouseClicked(evt);
+            }
         });
         scrollPaneList.setViewportView(itemList);
 
         addButton.setText("+");
+        addButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addButtonMouseClicked(evt);
+            }
+        });
 
         minusButton.setText("-");
 
@@ -85,41 +107,54 @@ public class MainPanel extends javax.swing.JPanel {
                 .addGap(15, 15, 15))
         );
 
-        titleTextField.setText("jTextField1");
+        titleTextField.setText("Add note");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(5);
-        noteField.setViewportView(jTextArea1);
+        noteTextArea.setColumns(20);
+        noteTextArea.setLineWrap(true);
+        noteTextArea.setRows(5);
+        scrollPaneNote.setViewportView(noteTextArea);
 
         saveButton.setText("Save");
+
+        dateField.setEnabled(false);
+
+        doneButton.setText("Done");
 
         javax.swing.GroupLayout rightPanelLayout = new javax.swing.GroupLayout(rightPanel);
         rightPanel.setLayout(rightPanelLayout);
         rightPanelLayout.setHorizontalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rightPanelLayout.createSequentialGroup()
-                .addGap(91, 91, 91)
-                .addComponent(titleTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
-                .addGap(91, 91, 91))
-            .addGroup(rightPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(noteField)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(saveButton)
-                .addContainerGap())
+                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(rightPanelLayout.createSequentialGroup()
+                        .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(titleTextField)
+                        .addGap(91, 91, 91))
+                    .addGroup(rightPanelLayout.createSequentialGroup()
+                        .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(scrollPaneNote, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightPanelLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(doneButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(saveButton)))
+                        .addContainerGap())))
         );
         rightPanelLayout.setVerticalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rightPanelLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(titleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(titleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(noteField, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                .addComponent(scrollPaneNote, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(saveButton)
+                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(saveButton)
+                    .addComponent(doneButton))
                 .addGap(15, 15, 15))
         );
 
@@ -139,18 +174,94 @@ public class MainPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addButtonMouseClicked
+        // TODO add your handling code here:
+        JFrame addPanelFrame = new JFrame("Add Note");
+        AddPanel addPanel = new AddPanel(view, addPanelFrame);
+        addPanelFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addPanelFrame.add(addPanel);
+        addPanelFrame.pack();
+        addPanelFrame.setVisible(true);
+        
+    }//GEN-LAST:event_addButtonMouseClicked
+
+    private void itemListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemListMouseClicked
+        // TODO add your handling code here:
+        int index = itemList.locationToIndex(evt.getPoint());
+        if(index != -1) {
+            view.updateActiveNote(index);
+        }
+    }//GEN-LAST:event_itemListMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
+    private javax.swing.JTextField dateField;
+    private javax.swing.JButton doneButton;
     private javax.swing.JList<String> itemList;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JPanel leftPanel;
     private javax.swing.JLabel logoLable;
     private javax.swing.JButton minusButton;
-    private javax.swing.JScrollPane noteField;
+    private javax.swing.JTextArea noteTextArea;
     private javax.swing.JPanel rightPanel;
     private javax.swing.JButton saveButton;
     private javax.swing.JScrollPane scrollPaneList;
+    private javax.swing.JScrollPane scrollPaneNote;
     private javax.swing.JTextField titleTextField;
     // End of variables declaration//GEN-END:variables
+
+    public JButton getAddButton() {
+        return addButton;
+    }
+
+    public JTextField getDateField() {
+        return dateField;
+    }
+
+    public JButton getDoneButton() {
+        return doneButton;
+    }
+
+    public JList<String> getItemList() {
+        return itemList;
+    }
+
+    public JPanel getLeftPanel() {
+        return leftPanel;
+    }
+
+    public JLabel getLogoLable() {
+        return logoLable;
+    }
+
+    public JButton getMinusButton() {
+        return minusButton;
+    }
+
+    public JTextArea getNoteTextArea() {
+        return noteTextArea;
+    }
+
+    public JPanel getRightPanel() {
+        return rightPanel;
+    }
+
+    public JButton getSaveButton() {
+        return saveButton;
+    }
+
+    public JScrollPane getScrollPaneList() {
+        return scrollPaneList;
+    }
+
+    public JScrollPane getScrollPaneNote() {
+        return scrollPaneNote;
+    }
+
+    public JTextField getTitleTextField() {
+        return titleTextField;
+    }
+
+    
+    
 }

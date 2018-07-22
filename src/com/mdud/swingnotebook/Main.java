@@ -10,7 +10,9 @@ package com.mdud.swingnotebook;
  * @author DuDa
  */
 public class Main {
+    private static Controller controller;
+    
     public static void main(String[] args) {
-        View view = new View();
+        controller = new Controller();
     }
 }
