@@ -64,9 +64,9 @@ public class MainPanel extends javax.swing.JPanel {
         logoLable.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mdud/res/icon.png"))); // NOI18N
 
         itemList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        itemList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                itemListMousePressed(evt);
+        itemList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                itemListValueChanged(evt);
             }
         });
         scrollPaneList.setViewportView(itemList);
@@ -204,13 +204,6 @@ public class MainPanel extends javax.swing.JPanel {
         controller.saveActiveNoteChanges();
     }//GEN-LAST:event_saveButtonMousePressed
 
-    private void itemListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemListMousePressed
-        // TODO add your handling code here:
-        int itemIndex = itemList.locationToIndex(evt.getPoint());
-        if(itemIndex != -1)
-            controller.setActiveNote(itemIndex);
-    }//GEN-LAST:event_itemListMousePressed
-
     private void doneButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_doneButtonMousePressed
         // TODO add your handling code here:
         controller.toggleDone();
@@ -223,6 +216,13 @@ public class MainPanel extends javax.swing.JPanel {
         if(dialogResult == JOptionPane.YES_OPTION)
             controller.removeNote();
     }//GEN-LAST:event_minusButtonMousePressed
+
+    private void itemListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_itemListValueChanged
+        // TODO add your handling code here:
+        int itemIndex = evt.getFirstIndex();
+        if(itemIndex != -1)
+            controller.setActiveNote(itemIndex);
+    }//GEN-LAST:event_itemListValueChanged
 
     //Custom cell renderer to mark done notes
     private class DoneListRenderer extends DefaultListCellRenderer{
