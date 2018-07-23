@@ -3,14 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mdud.swingnotebook.panels;
+package com.mdud.swingnotebook.views;
 
 
-import com.mdud.swingnotebook.View;
+import com.mdud.swingnotebook.Controller;
+import java.awt.Color;
+import java.awt.Component;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -25,11 +29,12 @@ public class MainPanel extends javax.swing.JPanel {
     /**
      * Creates new form MainPanel
      */
-    private View view;
+    private Controller controller;
     
-    public MainPanel(View view) {
+    public MainPanel(Controller controller) {
         initComponents();
-        this.view = view;
+        itemList.setCellRenderer(new DoneListRenderer());
+        this.controller = controller;
     }
     
 
@@ -48,16 +53,17 @@ public class MainPanel extends javax.swing.JPanel {
         itemList = new javax.swing.JList<>();
         addButton = new javax.swing.JButton();
         minusButton = new javax.swing.JButton();
+        doneButton = new javax.swing.JButton();
         rightPanel = new javax.swing.JPanel();
         titleTextField = new javax.swing.JTextField();
         scrollPaneNote = new javax.swing.JScrollPane();
         noteTextArea = new javax.swing.JTextArea();
         saveButton = new javax.swing.JButton();
         dateField = new javax.swing.JTextField();
-        doneButton = new javax.swing.JButton();
 
         logoLable.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mdud/res/icon.png"))); // NOI18N
 
+        itemList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         itemList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 itemListMouseClicked(evt);
@@ -73,6 +79,18 @@ public class MainPanel extends javax.swing.JPanel {
         });
 
         minusButton.setText("-");
+        minusButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                minusButtonMouseClicked(evt);
+            }
+        });
+
+        doneButton.setText("✓");
+        doneButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                doneButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout leftPanelLayout = new javax.swing.GroupLayout(leftPanel);
         leftPanel.setLayout(leftPanelLayout);
@@ -85,8 +103,10 @@ public class MainPanel extends javax.swing.JPanel {
                         .addComponent(logoLable))
                     .addGroup(leftPanelLayout.createSequentialGroup()
                         .addGap(14, 14, 14)
-                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(leftPanelLayout.createSequentialGroup()
+                                .addComponent(doneButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(addButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(minusButton))
@@ -103,7 +123,8 @@ public class MainPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addButton)
-                    .addComponent(minusButton))
+                    .addComponent(minusButton)
+                    .addComponent(doneButton))
                 .addGap(15, 15, 15))
         );
 
@@ -115,10 +136,13 @@ public class MainPanel extends javax.swing.JPanel {
         scrollPaneNote.setViewportView(noteTextArea);
 
         saveButton.setText("Save");
+        saveButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                saveButtonMouseClicked(evt);
+            }
+        });
 
         dateField.setEnabled(false);
-
-        doneButton.setText("Done");
 
         javax.swing.GroupLayout rightPanelLayout = new javax.swing.GroupLayout(rightPanel);
         rightPanel.setLayout(rightPanelLayout);
@@ -134,11 +158,9 @@ public class MainPanel extends javax.swing.JPanel {
                         .addGap(91, 91, 91))
                     .addGroup(rightPanelLayout.createSequentialGroup()
                         .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(scrollPaneNote, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                            .addComponent(scrollPaneNote, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightPanelLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(doneButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(saveButton)))
                         .addContainerGap())))
         );
@@ -150,11 +172,9 @@ public class MainPanel extends javax.swing.JPanel {
                     .addComponent(titleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(scrollPaneNote, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                .addComponent(scrollPaneNote, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(saveButton)
-                    .addComponent(doneButton))
+                .addComponent(saveButton)
                 .addGap(15, 15, 15))
         );
 
@@ -176,23 +196,50 @@ public class MainPanel extends javax.swing.JPanel {
 
     private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addButtonMouseClicked
         // TODO add your handling code here:
-        JFrame addPanelFrame = new JFrame("Add Note");
-        AddPanel addPanel = new AddPanel(view, addPanelFrame);
-        addPanelFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        addPanelFrame.add(addPanel);
-        addPanelFrame.pack();
-        addPanelFrame.setVisible(true);
+        // Do it on one frame its more clear!
+        controller.addNote();
+        
         
     }//GEN-LAST:event_addButtonMouseClicked
 
     private void itemListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemListMouseClicked
         // TODO add your handling code here:
-        int index = itemList.locationToIndex(evt.getPoint());
-        if(index != -1) {
-            view.updateActiveNote(index);
-        }
+        int itemIndex = itemList.locationToIndex(evt.getPoint());
+        if(itemIndex != -1)
+            controller.setActiveNote(itemIndex);
     }//GEN-LAST:event_itemListMouseClicked
 
+    private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveButtonMouseClicked
+        // TODO add your handling code here:
+        controller.saveActiveNoteChanges();
+    }//GEN-LAST:event_saveButtonMouseClicked
+
+    private void doneButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_doneButtonMouseClicked
+        // TODO add your handling code here:
+        controller.toggleDone();
+    }//GEN-LAST:event_doneButtonMouseClicked
+
+    private void minusButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minusButtonMouseClicked
+        // TODO add your handling code here:
+        int dialogResult = JOptionPane.showConfirmDialog(this, "Would you like to remove active note?",
+                "Delete note", JOptionPane.YES_NO_OPTION);
+        if(dialogResult == JOptionPane.YES_OPTION)
+            controller.removeNote();
+    }//GEN-LAST:event_minusButtonMouseClicked
+
+    //Custom cell renderer to mark done notes
+    private class DoneListRenderer extends DefaultListCellRenderer{
+
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus); //To change body of generated methods, choose Tools | Templates.
+            if(controller.getDoneIndices().contains(index))
+                setForeground(new Color(80, 150, 80));
+            
+            return this;
+        }
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
