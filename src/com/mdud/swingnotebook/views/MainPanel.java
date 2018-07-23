@@ -65,30 +65,30 @@ public class MainPanel extends javax.swing.JPanel {
 
         itemList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         itemList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                itemListMouseClicked(evt);
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                itemListMousePressed(evt);
             }
         });
         scrollPaneList.setViewportView(itemList);
 
         addButton.setText("+");
         addButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                addButtonMouseClicked(evt);
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                addButtonMousePressed(evt);
             }
         });
 
         minusButton.setText("-");
         minusButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                minusButtonMouseClicked(evt);
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                minusButtonMousePressed(evt);
             }
         });
 
         doneButton.setText("✓");
         doneButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                doneButtonMouseClicked(evt);
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                doneButtonMousePressed(evt);
             }
         });
 
@@ -137,8 +137,8 @@ public class MainPanel extends javax.swing.JPanel {
 
         saveButton.setText("Save");
         saveButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                saveButtonMouseClicked(evt);
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                saveButtonMousePressed(evt);
             }
         });
 
@@ -194,38 +194,35 @@ public class MainPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addButtonMouseClicked
+    private void addButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addButtonMousePressed
         // TODO add your handling code here:
-        // Do it on one frame its more clear!
         controller.addNote();
-        
-        
-    }//GEN-LAST:event_addButtonMouseClicked
+    }//GEN-LAST:event_addButtonMousePressed
 
-    private void itemListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemListMouseClicked
+    private void saveButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveButtonMousePressed
+        // TODO add your handling code here:
+        controller.saveActiveNoteChanges();
+    }//GEN-LAST:event_saveButtonMousePressed
+
+    private void itemListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemListMousePressed
         // TODO add your handling code here:
         int itemIndex = itemList.locationToIndex(evt.getPoint());
         if(itemIndex != -1)
             controller.setActiveNote(itemIndex);
-    }//GEN-LAST:event_itemListMouseClicked
+    }//GEN-LAST:event_itemListMousePressed
 
-    private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveButtonMouseClicked
-        // TODO add your handling code here:
-        controller.saveActiveNoteChanges();
-    }//GEN-LAST:event_saveButtonMouseClicked
-
-    private void doneButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_doneButtonMouseClicked
+    private void doneButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_doneButtonMousePressed
         // TODO add your handling code here:
         controller.toggleDone();
-    }//GEN-LAST:event_doneButtonMouseClicked
+    }//GEN-LAST:event_doneButtonMousePressed
 
-    private void minusButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minusButtonMouseClicked
+    private void minusButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minusButtonMousePressed
         // TODO add your handling code here:
         int dialogResult = JOptionPane.showConfirmDialog(this, "Would you like to remove active note?",
                 "Delete note", JOptionPane.YES_NO_OPTION);
         if(dialogResult == JOptionPane.YES_OPTION)
             controller.removeNote();
-    }//GEN-LAST:event_minusButtonMouseClicked
+    }//GEN-LAST:event_minusButtonMousePressed
 
     //Custom cell renderer to mark done notes
     private class DoneListRenderer extends DefaultListCellRenderer{
