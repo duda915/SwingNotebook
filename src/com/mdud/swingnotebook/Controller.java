@@ -55,8 +55,9 @@ public class Controller {
         model.removeNote(activeNoteIndex);
         activeNoteIndex--;
         
-        saveNotesToFile();
         updateView();
+        saveNotesToFile();
+
     }
     
     public void setActiveNote(int index) {
