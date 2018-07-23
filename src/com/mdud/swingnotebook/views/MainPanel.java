@@ -135,7 +135,7 @@ public class MainPanel extends javax.swing.JPanel {
         noteTextArea.setRows(5);
         scrollPaneNote.setViewportView(noteTextArea);
 
-        saveButton.setText("Save");
+        saveButton.setText("Save All");
         saveButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 saveButtonMousePressed(evt);
@@ -201,7 +201,7 @@ public class MainPanel extends javax.swing.JPanel {
 
     private void saveButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveButtonMousePressed
         // TODO add your handling code here:
-        controller.saveActiveNoteChanges();
+        controller.saveNotesToFile();
     }//GEN-LAST:event_saveButtonMousePressed
 
     private void doneButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_doneButtonMousePressed
@@ -219,8 +219,8 @@ public class MainPanel extends javax.swing.JPanel {
 
     private void itemListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_itemListValueChanged
         // TODO add your handling code here:
-        int itemIndex = evt.getFirstIndex();
-
+        int itemIndex = itemList.getSelectedIndex();
+        
         if(itemIndex != -1 && !evt.getValueIsAdjusting())
             controller.setActiveNote(itemIndex);
     }//GEN-LAST:event_itemListValueChanged

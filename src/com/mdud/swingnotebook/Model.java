@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -80,6 +81,7 @@ public class Model {
     public void removeNote(int id) {
         notesList.remove(id);
     }
+    
     
     public int getNotesCount() {
         return notesList.size();

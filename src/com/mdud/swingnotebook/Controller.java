@@ -12,7 +12,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.ListModel;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+import javax.swing.plaf.basic.BasicListUI;
 
 /**
  *
@@ -25,7 +31,11 @@ public class Controller {
     //View
     private JFrame mainFrame;
     private MainPanel view;
-    private int activeNoteIndex;
+    private int activeNoteIndex = 0;
+    
+    //List data model
+    private DefaultListModel<String> dlm;
+    
     
     public Controller() {
         model = new Model();
@@ -38,31 +48,50 @@ public class Controller {
         mainFrame.pack();
         mainFrame.setVisible(true);
         
+        dlm = new DefaultListModel<>();
+        getItemList();
+        view.getItemList().setModel(dlm);
+        updateItemData();
+        view.getItemList().setSelectedIndex(activeNoteIndex);
         //First update
-        updateView();
+        
+        
         
     }
     
     public void addNote() {
         Note note = new Note("Title", new Date(), "");
         model.addNote(note);
+        dlm.addElement(note.getNoteTitle());
         
-        saveNotesToFile();
-        updateView();
+        view.getItemList().setSelectedIndex(view.getItemList().getLastVisibleIndex());
     }
     
     public void removeNote() {
         model.removeNote(activeNoteIndex);
+        dlm.remove(activeNoteIndex);
         activeNoteIndex--;
         
-        updateView();
-        saveNotesToFile();
+        
+        //Empty list handler
+        if(activeNoteIndex == -1 && model.getNotesCount() == 0) {
+            activeNoteIndex = 0;
+            Note note = new Note("Title", new Date(), "");
+            model.addNote(note);
+            dlm.addElement(note.getNoteTitle());
+        } else if(activeNoteIndex == -1) {
+            activeNoteIndex = 0;
+        }
+        
+        view.getItemList().setSelectedIndex(activeNoteIndex);
 
     }
     
     public void setActiveNote(int index) {
+        saveActiveNoteChanges();
         activeNoteIndex = index;
-        updateView();
+        
+        updateItemData();
     }
     
     public void saveActiveNoteChanges() {
@@ -74,33 +103,29 @@ public class Controller {
             
             Note note = new Note(noteTitle, noteDate, noteContent);
             model.setNote(activeNoteIndex, note);
+            dlm.set(activeNoteIndex, noteTitle);
     
         }catch(ParseException e) {
             System.out.println("Date parsing error");
+            e.printStackTrace();
         }
         
-        saveNotesToFile();
-        updateView();
     }
     
-    private void saveNotesToFile(){
+    public void saveNotesToFile(){
+        saveActiveNoteChanges();
         model.saveNotes();
     }
+
+    private void getItemList() {
+        dlm.clear();
+        
+        for(String s : model.getTitlesList())
+            dlm.addElement(s);
+        
+    }
     
-    private void updateView() {
-        if(activeNoteIndex == -1 && model.getNotesCount() == 0) {
-            activeNoteIndex = 0;
-            Note note = new Note("Title", new Date(), "");
-            model.addNote(note);
-        } else if(activeNoteIndex == -1) {
-            activeNoteIndex = 0;
-        }
-        
-        //Update item list
-        List<String> titlesArray = model.getTitlesList();
-        String[] listData = titlesArray.toArray(new String[titlesArray.size()]);
-        view.getItemList().setListData(listData);
-        
+    private void updateItemData() { 
         //Update active note
         Note note = model.getNote(activeNoteIndex);
         view.getTitleTextField().setText(note.getNoteTitle());
@@ -110,10 +135,9 @@ public class Controller {
     }
     
     public void toggleDone() {
-        saveActiveNoteChanges();
+//        saveActiveNoteChanges();
         model.markAsDone(activeNoteIndex);
-        saveNotesToFile();
-        updateView();
+        view.repaint();
     }
     
     public List<Integer> getDoneIndices() {
