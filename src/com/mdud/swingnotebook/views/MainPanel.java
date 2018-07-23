@@ -220,7 +220,8 @@ public class MainPanel extends javax.swing.JPanel {
     private void itemListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_itemListValueChanged
         // TODO add your handling code here:
         int itemIndex = evt.getFirstIndex();
-        if(itemIndex != -1)
+
+        if(itemIndex != -1 && !evt.getValueIsAdjusting())
             controller.setActiveNote(itemIndex);
     }//GEN-LAST:event_itemListValueChanged
 
