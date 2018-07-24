@@ -40,6 +40,29 @@ public class Model {
         notesList.add(note);
     }
     
+    public void setEditedElement(int index){
+        notesList.get(index).setIsEdited(true);
+    }
+    
+    public void clearEditedElements() {
+        notesList.forEach(n -> n.setIsEdited(false));
+    }
+    
+    public boolean getIsEditedElement(int index) {
+        return notesList.get(index).getIsEdited();
+    }
+    
+    public List<Integer> getEditedElements() {
+        List<Integer> editedElements = new ArrayList<>();
+        
+        for(int i = 0; i < notesList.size(); i++) {
+            if(notesList.get(i).getIsEdited())
+                editedElements.add(i);
+        }
+        
+        return editedElements;
+    }
+    
     
     public List<String> getTitlesList() {
         List<String> titlesList = new ArrayList<>();

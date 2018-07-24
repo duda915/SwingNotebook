@@ -20,6 +20,7 @@ public class Note {
     private Date noteDate;
     private String noteContent;
     private Boolean isDone = false;
+    private Boolean isEdited = false;
     
     
     public Note(String noteTitle, Date noteDate, String note) {
@@ -67,6 +68,14 @@ public class Note {
     
     public int getNoteId() {
         return noteId;
+    }
+    
+    public void setIsEdited(boolean edited) {
+        isEdited = edited;
+    }
+    
+    public boolean getIsEdited() {
+        return isEdited;
     }
     
     

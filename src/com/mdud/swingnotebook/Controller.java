@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Vector;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JScrollBar;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -60,11 +61,15 @@ public class Controller {
     }
     
     public void addNote() {
-        Note note = new Note("Title", new Date(), "");
+        Note note = new Note("New note", new Date(), "");
+        note.setIsEdited(true);
         model.addNote(note);
         dlm.addElement(note.getNoteTitle());
         
+        JScrollBar scroll = view.getScrollPaneList().getVerticalScrollBar();
+        scroll.setValue(scroll.getMaximum());
         view.getItemList().setSelectedIndex(view.getItemList().getLastVisibleIndex());
+
     }
     
     public void removeNote() {
@@ -83,6 +88,7 @@ public class Controller {
             activeNoteIndex = 0;
         }
         
+        updateItemData();
         view.getItemList().setSelectedIndex(activeNoteIndex);
 
     }
@@ -95,26 +101,25 @@ public class Controller {
     }
     
     public void saveActiveNoteChanges() {
-        try {
-            String noteTitle = view.getTitleTextField().getText();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            Date noteDate = sdf.parse(view.getDateField().getText());
-            String noteContent = view.getNoteTextArea().getText();
-            
-            Note note = new Note(noteTitle, noteDate, noteContent);
-            model.setNote(activeNoteIndex, note);
-            dlm.set(activeNoteIndex, noteTitle);
-    
-        }catch(ParseException e) {
-            System.out.println("Date parsing error");
-            e.printStackTrace();
+        String noteTitle = view.getTitleTextField().getText();
+        String noteContent = view.getNoteTextArea().getText();
+
+        if(!model.getNote(activeNoteIndex).getNoteTitle().equals(noteTitle) ||
+                !model.getNote(activeNoteIndex).getNoteContent().equals(noteContent)) {
+            model.getNote(activeNoteIndex).setNoteTitle(noteTitle);
+            model.getNote(activeNoteIndex).setNoteContent(noteContent);
+
+            model.setEditedElement(activeNoteIndex);
         }
-        
     }
+    
     
     public void saveNotesToFile(){
         saveActiveNoteChanges();
+        getItemList();
         model.saveNotes();
+        view.getItemList().setSelectedIndex(activeNoteIndex);
+        model.clearEditedElements();
     }
 
     private void getItemList() {
@@ -137,6 +142,7 @@ public class Controller {
     public void toggleDone() {
 //        saveActiveNoteChanges();
         model.markAsDone(activeNoteIndex);
+        model.getNote(activeNoteIndex).setIsEdited(true);
         view.repaint();
     }
     
@@ -148,6 +154,10 @@ public class Controller {
         view.getTitleTextField().setText("");
         view.getNoteTextArea().setText("");
         view.getDateField().setText("");
+    }
+    
+    public List<Integer> getEditedElements() {
+        return model.getEditedElements();
     }
     
     

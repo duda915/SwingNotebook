@@ -19,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -233,6 +235,8 @@ public class MainPanel extends javax.swing.JPanel {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus); //To change body of generated methods, choose Tools | Templates.
             if(controller.getDoneIndices().contains(index))
                 setForeground(new Color(80, 150, 80));
+            if(controller.getEditedElements().contains(index))
+                setText(getText()+"*");
             
             return this;
         }
